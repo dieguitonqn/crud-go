@@ -10,6 +10,7 @@ func SignUp(email, password string) error {
 	if email == "" || password == "" {
 		return errors.New("email y contraseña son requeridos")
 	}
+	
 	return nil
 }
 
