@@ -1,0 +1,31 @@
+services:
+
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    init: true
+    environment:
+      POSTGRES_USER: admin #${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: admin # ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: crud_go #${POSTGRES_DB:-crud_go}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  adminer:
+    image: adminer:latest
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8081:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  postgres_data:
